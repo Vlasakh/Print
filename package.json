@@ -1,0 +1,15 @@
+{
+  "name": "create-react-app-customized",
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "sass-loader": "^6.0.6"
+  },
+  "scripts": {
+    "start": "node scripts/customized-config start",
+    "build": "node scripts/customized-config build",
+    "test": "node scripts/customized-config test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
