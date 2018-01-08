@@ -1,8 +1,10 @@
 /**
  * Libs
- * https://github.com/niksy/throttle-debounce
  */
 
+// https://github.com/niksy/throttle-debounce
+// https://rawgit.com/Vlasakh/Print/master/react/src/utils.js
+// https://cdn.rawgit.com/Vlasakh/Print/master/react/src/utils.js
 console.clear();
 
 const PropTypes = React.PropTypes;
