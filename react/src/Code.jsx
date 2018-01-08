@@ -216,3 +216,17 @@ console.log( '{cou_down, $cou_up, $divisible_4}', {cou_down, $cou_up, $divisible
 ReactDOM.render(
   <App />, document.getElementById('root')
 );
+
+
+
+/**
+ * Return colored text
+ * @param str
+ * @param color
+ * @param bg
+ * @returns HTMLElement
+ */
+function redFont (str, color = 'red', bg = 'white')
+{
+    return <span style={{color:color, backgroundColor: bg}}>{str}</span>;
+}
