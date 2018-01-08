@@ -18,7 +18,7 @@ class App extends React.Component
         super();
 
         this.state = {
-            pages: 16,
+            pages: 0,
             start: 1,
             pageSet1: null,
             pageSet2: null,
@@ -29,25 +29,25 @@ class App extends React.Component
     render()
     {
         const { start, pages, pageSet1, pageSet2 } = this.state;
-        console.log( '{ start, pages, pageSet1 }', { start, pages, pageSet1 } );
+        // console.log( '{ start, pages, pageSet1 }', { start, pages, pageSet1 } );
 
         return <div className='wrapper'>
             <form onSubmit={this._beginCalc}>
                 <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1">Страниц</span>
-                    <input type='text' className="form-control" name='pages' onChange={this._setInputData} placeholder="Страниц" aria-describedby="basic-addon1" value={pages} />
+                    <input type='text' className="form-control" name='pages' onChange={this._setInputData} placeholder="Страниц" aria-describedby="basic-addon1" value={this.state.pages} />
                 </div>
                 <br />
                 <div className="input-group">
                     <span className="input-group-addon" id="basic-addon2">Первая страница</span>
-                    <input type='text' className="form-control" name='start' onChange={this._setInputData} placeholder="Первая страница" aria-describedby="basic-addon2" value={start} />
+                    <input type='text' className="form-control" name='start' onChange={this._setInputData} placeholder="Первая страница" aria-describedby="basic-addon2" value={this.state.start} />
                 </div>
                 <br />
-                <button type='submit' className='btn btn-success'>Расчитать</button>
+                {/*<button type='submit' className='btn btn-success'>Расчитать</button>*/}
             </form>
 
             {pageSet1 && <div className="block01">
-                <div className="header01"><strong>&nbsp;Брошура:&nbsp;</strong></div>
+                <h4 className="header01"><span className='label label-info '>Брошура:</span></h4>
                 {pageSet1 && <PageSetOne {...{pageSet: pageSet1, pages, title: 'Первая сторона:'}}>
                     <p><em>{redFont('Помнить про зеркальные поля для подшивки. Поля для подшивки ставить "снутри" !!!')}</em></p>
                 </PageSetOne>}
@@ -62,56 +62,91 @@ class App extends React.Component
     }
 
 
-    _setInputData = ({target: {value}, target}) => {
-        console.log( '{value, target}', target.value, target.getAttribute('name') );
-
-        this.setState({[target.getAttribute('name')]: value})
+    _setInputData = ({target: {value}, target}) =>
+    {
+            this.setState({[target.getAttribute('name')]: value}, () => {
+                this._beginCalcT();
+            })
     };
 
 
     _beginCalc = (event) => {
-        event.preventDefault();
+        event && event.preventDefault();
 
         const { pages, start } = this.state;
 
         const pagesSets = (new Utils).calc(start, pages);
 
-        console.log( '{pagesSets}', {pagesSets} );
         this.setState({pageSet1: pagesSets[0], pageSet2: pagesSets[1], });
     }
+
+
+    _beginCalcT = debounce(500, false, this._beginCalc);
 }
 
 
-function PageSetOne({pageSet, children, title}) {
-    // Брошура
-    return <div>
-        <p style={{marginTop: '40px'}}>
-            {redFont(<strong>{title}</strong>, "green")}<br />
-            {pageSet.map((value, idx) =>
-                <span>
-                    <span style={{color: value[1][1]}}>{value[1][0]},</span>
-                    <span style={{color: value[0][1]}}>{value[0][0]}</span>
-                    {idx+1 < pageSet.length && ","}
-                    &nbsp;
-                </span>
-            )}
-        </p>
+class PageSetOne extends React.PureComponent
+{
+    render()
+    {
+        const {pageSet, children, title} = this.props;
+        const random = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        const id = 'pageSet' + random();
+        const id2 = 'pageSet' + random();
 
-        <p>
-            {redFont("<=> ", "green")}
-            {pageSet.reverse().map((value, idx) =>
-                <span>
-                    <span style={{color: value[1][1]}}>{value[1][0]},</span>
-                    <span style={{color: value[0][1]}}>{value[0][0]}</span>
-                    {idx+1 < pageSet.length && ","}
-                    &nbsp;
-                </span>
-            )}
-            <br />&nbsp;
-        </p>
+        // Брошура
+        return <div>
+            <p className='pageSet_p'>
+                {redFont(<strong>{title}</strong>, "green")}<br />
+                {this._renderPageSet(pageSet, id)}
+                &nbsp;&nbsp;
+                <button type='button' className='btn btn-xs btn-warning' onClick={this._onCopy.bind(this, id)} title='Копировать значения'>C</button>
+            </p>
 
-        {children}
-    </div>
+            <p>
+                {redFont("<=> ", "green")}
+                {this._renderPageSet(pageSet.reverse(), id2)}
+                &nbsp;&nbsp;
+                <button type='button' className='btn btn-xs btn-warning' onClick={this._onCopy.bind(this, id2)} title='Копировать значения'>C</button>
+                <br />&nbsp;
+            </p>
+
+            {children}
+        </div>
+    }
+
+
+    _renderPageSet(pageSet, id)
+    {
+        let inputVal = '';
+        let retPageSet;
+
+        retPageSet = pageSet.map((value, idx) =>
+        {
+            inputVal += `${value[1][0]},${value[0][0]}${idx+1 < pageSet.length ? "," : ''}`;
+            return <span key={idx}>
+                <span style={{color: value[1][1]}}>{value[1][0]},</span>
+                <span style={{color: value[0][1]}}>{value[0][0]}</span>
+                {idx+1 < pageSet.length && ", "}
+            </span>
+        });
+
+        retPageSet.push(<input key={pageSet.length + 1} className='copyText' id={id} type="text" defaultValue={inputVal} />);
+
+        return retPageSet;
+    }
+
+    _onCopy = id => {
+        const copyTextarea = document.querySelector('#' + id);
+        copyTextarea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            console.log('Copying text command was ' + successful ? 'successful' : 'unsuccessful');
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+    };
 }
 
 
@@ -165,38 +200,14 @@ console.log( '{cou_down, $cou_up, $divisible_4}', {cou_down, $cou_up, $divisible
             // $s1 = redFont("$cou_up,", $color_sec);
             item = [[$cou_up, $color_sec]];
             $cou_up += 2;
-            if ((($divisible_4 - $pages) == 2) && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = [["bl", "red"]];
-            else if (($divisible_4 - $pages) == 3 && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = [["bl", "red"]];
+            if ((($divisible_4 - $pages) == 2) && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = ["bl", "red"];
+            else if (($divisible_4 - $pages) == 3 && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = ["bl", "red"];
             else item[1] = [cou_down, $color];
             cou_down -= 2;
             $pagesSet2.push(item);
         } // endfor
         return [$pagesSet, $pagesSet2];
-/*
-
-        $s1 = join(" ", $pagesSet);
-        print
-        substr_replace($s1, "", strrpos($s1, ","), 1).
-        "</p>";
-        $s1 = join(" ", array_reverse($pagesSet));
-        print
-        "<p>".redFont("<=> ", "green").substr_replace($s1, "", strrpos($s1, ","), 1)."<br />&nbsp;</p>\n";*/
     }
-}
-
-
-/*
-function redFont($str, $color = "red", $bgcolor = 0) {
-    let $bg;
-    if ($bgcolor) $bg = "bg"; else $bg = '';
-    return `<span style="color:${$color};${$bg}">`+$str+
-    "</span>";
-}
-*/
-
-function redFont (str, color = 'red', bg = 'white')
-{
-    return <span style={{color:color, backgroundColor: bg}}>{str}</span>;
 }
 
 

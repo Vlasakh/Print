@@ -111,3 +111,16 @@ function throttle ( delay, noTrailing, callback, debounceMode ) {
 function debounce( delay, atBegin, callback ) {
 	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
 }
+
+
+/**
+ * Return colored text
+ * @param str
+ * @param color
+ * @param bg
+ * @returns HTMLElement
+ */
+function redFont (str, color = 'red', bg = 'white')
+{
+    return <span style={{color:color, backgroundColor: bg}}>{str}</span>;
+}
