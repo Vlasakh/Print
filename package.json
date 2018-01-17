@@ -1,15 +1,27 @@
 {
-  "name": "create-react-app-customized",
-  "version": "0.1.0",
-  "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "sass-loader": "^6.0.6"
-  },
-  "scripts": {
-    "start": "node scripts/customized-config start",
-    "build": "node scripts/customized-config build",
-    "test": "node scripts/customized-config test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "name": "create-react-app-customized",
+    "version": "1.0.3",
+    "dependencies": {
+        "react": "^15.6.1",
+        "react-dom": "^15.6.1",
+        "sass-loader": "^6.0.6"
+    },
+    "scripts": {
+        "start": "node scripts/customized-config start",
+        "build:dev": "webpack --watch --watch-aggregate-timeout 300 --env.patch",
+        "test": "node scripts/customized-config test --env=jsdom"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-plugin-react-html-attrs": "^2.1.0",
+        "babel-plugin-remove-comments": "^2.0.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "webpack": "^3.0.0",
+        "webpack-auto-inject-version": "^1.0.0",
+        "webpack-notifier": "^1.5.0",
+        "webpack-uglify-js-plugin": "^1.1.9"
+    }
 }

@@ -1,8 +1,5 @@
 /* eslint-disable no-undefined,no-param-reassign,no-shadow */
 
-function some() {
-    console.log('test');
-}
 /**
  * Throttle execution of a function. Especially useful for rate limiting
  * execution of handlers on events like resize and scroll.
@@ -112,3 +109,15 @@ function debounce( delay, atBegin, callback ) {
 	return callback === undefined ? throttle(delay, atBegin, false) : throttle(delay, callback, atBegin !== false);
 }
 
+
+/**
+ * Return colored text
+ * @param str
+ * @param color
+ * @param bg
+ * @returns HTMLElement
+ */
+function redFont (str, color = 'red', bg = 'white')
+{
+    return <span style={{color:color, backgroundColor: bg}}>{str}</span>;
+}

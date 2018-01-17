@@ -1,10 +1,12 @@
+import React, { Component } from 'react';
+
 /**
  * Libs
+ * https://github.com/niksy/throttle-debounce
+ * https://rawgit.com/Vlasakh/Print/master/react/src/utils.js
+ * https://cdn.rawgit.com/Vlasakh/Print/master/react/src/utils.js
  */
 
-// https://github.com/niksy/throttle-debounce
-// https://rawgit.com/Vlasakh/Print/master/react/src/utils.js
-// https://cdn.rawgit.com/Vlasakh/Print/master/react/src/utils.js
 console.clear();
 
 const PropTypes = React.PropTypes;
@@ -13,7 +15,7 @@ const PropTypes = React.PropTypes;
 /**
  * Приложение
  */
-class App extends React.Component
+export class App extends React.PureComponent
 {
     constructor()
     {
@@ -33,7 +35,7 @@ class App extends React.Component
         const { start, pages, pageSet1, pageSet2 } = this.state;
         // console.log( '{ start, pages, pageSet1 }', { start, pages, pageSet1 } );
 
-        return <div className='wrapper'>
+        return <div>
             <form onSubmit={this._beginCalc}>
                 <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1">Страниц</span>
@@ -212,21 +214,3 @@ console.log( '{cou_down, $cou_up, $divisible_4}', {cou_down, $cou_up, $divisible
     }
 }
 
-
-ReactDOM.render(
-  <App />, document.getElementById('root')
-);
-
-
-
-/**
- * Return colored text
- * @param str
- * @param color
- * @param bg
- * @returns HTMLElement
- */
-function redFont (str, color = 'red', bg = 'white')
-{
-    return <span style={{color:color, backgroundColor: bg}}>{str}</span>;
-}
