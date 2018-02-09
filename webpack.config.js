@@ -2,7 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const WebpackAutoInject = require('webpack-auto-inject-version');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+// const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const postcssConfig = require('./webpackinc/postcss.config.js');
 
@@ -21,10 +22,10 @@ module.exports = {
             // 'redux',
             // 'react-router',
         ],
-        styles: './src/styles/index.scss'
+        // styles: './src/styles/index.scss'
     },
     output: {
-        filename: './public/js/[name].js',
+        filename: './public/assets/[name].js',
     },
     module: {
         rules: [
@@ -51,27 +52,27 @@ module.exports = {
             // },
             {
                 test: /\.scss$/,
-                use: ExtractCssChunks.extract({
-                    fallback: 'style',
+                // use: ExtractCssChunks.extract({
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
                     use: [
                         {
                             loader: 'css-loader',
                             options: {
                                 minimize: false,
                                 modules: true,
-                                // localIdentName: '[hash:base64:5]',
-                                sourceMap: sourceMap,
-                                importLoaders: 1
+                                localIdentName: '[name]__[local]_[hash:base64:5]',
+                                // sourceMap: sourceMap,
+                                sourceMap: true,
+                                // importLoaders: 1
                             }
                         },
                         {
-                            loader: 'sass',
-                            // query: {
-                            //     sourceMap: false,
-                            // },
-                            options: {
-                                includePaths: ["src/styles"]
-                            }
+                            loader: 'sass-loader',
+                            query: {
+                                sourceMap: false,
+                                // includePaths: ["src/styles"]
+                            },
                         }
                     ]
                 })
@@ -117,6 +118,14 @@ module.exports = {
 			name: "bundlev",
 			minChunks: Infinity
 		}),
+
+        new ExtractTextPlugin({
+            // "public/assets/index.css"
+            filename: '[name].css'
+        }),
+        // new ExtractCssChunks({
+        //     filename: '[name].css'
+        // }),
 
         // new webpack.LoaderOptionsPlugin({
         //     test: /\.css/,
