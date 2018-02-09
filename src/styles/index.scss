@@ -1,0 +1,12 @@
+.wrapper { padding: 10px }
+
+.block01 { position: relative; margin-top: 30px; padding: 0 10px; border: 1px solid #ddd; border-radius: 5px; }
+.header01 { position: absolute; margin-top: -1px; top: 0; left: 0;
+    .label { border-radius: .25em 0 .25em 0; }
+}
+
+.pageSet {
+    &_p { margin-top: 30px }
+}
+
+.copyText { position: absolute; opacity: 0; left: -1300px }

@@ -1,6 +1,6 @@
 {
     "name": "create-react-app-customized",
-    "version": "1.0.3",
+    "version": "1.0.17",
     "dependencies": {
         "react": "^15.6.1",
         "react-dom": "^15.6.1",
@@ -19,6 +19,12 @@
         "babel-plugin-transform-class-properties": "^6.24.1",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
+        "css-loader": "^0.28.9",
+        "express": "^4.16.2",
+        "extract-css-chunks-webpack-plugin": "^2.0.18",
+        "node-sass": "^4.7.2",
+        "postcss-loader": "^2.1.0",
+        "style-loader": "^0.20.1",
         "webpack": "^3.0.0",
         "webpack-auto-inject-version": "^1.0.0",
         "webpack-notifier": "^1.5.0",

@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
-
 /**
  * Libs
  * https://github.com/niksy/throttle-debounce
  * https://rawgit.com/Vlasakh/Print/master/react/src/utils.js
  * https://cdn.rawgit.com/Vlasakh/Print/master/react/src/utils.js
  */
+
+import React, { Component } from 'react';
+
+import { Utils } from './utils/utils';
+import { debounce, redFont } from '../src/utils/utils';
+
+import style from '../src/styles/index.scss';
+
+
+
 
 console.clear();
 
@@ -15,7 +23,7 @@ const PropTypes = React.PropTypes;
 /**
  * Приложение
  */
-export class App extends React.PureComponent
+export class App extends Component
 {
     constructor()
     {
@@ -35,7 +43,7 @@ export class App extends React.PureComponent
         const { start, pages, pageSet1, pageSet2 } = this.state;
         // console.log( '{ start, pages, pageSet1 }', { start, pages, pageSet1 } );
 
-        return <div>
+        return <div className={style.wrapper}>
             <form onSubmit={this._beginCalc}>
                 <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1">Страниц</span>
@@ -52,6 +60,7 @@ export class App extends React.PureComponent
 
             {pageSet1 && <div className="block01">
                 <h4 className="header01"><span className='label label-info '>Брошура:</span></h4>
+                {/*{pageSet1 && <PageSetOne pages={pages} title='Первая сторона:' some="some prop">}*/}
                 {pageSet1 && <PageSetOne {...{pageSet: pageSet1, pages, title: 'Первая сторона:'}}>
                     <p><em>{redFont('Помнить про зеркальные поля для подшивки. Поля для подшивки ставить "снутри" !!!')}</em></p>
                 </PageSetOne>}
@@ -61,7 +70,8 @@ export class App extends React.PureComponent
                      <p>{redFont("<=> ", "green")} - обратный порядок наборов листов, чтобы сразу получить середину и начать складывать еще до окончания печати</p>
                      <p>Кол-во листов : {Math.ceil(pages / 4)}</p>
                 </PageSetOne>}
-            </div>}
+            </div>
+            }
         </div>
     }
 
@@ -82,7 +92,7 @@ export class App extends React.PureComponent
         const pagesSets = (new Utils).calc(start, pages);
 
         this.setState({pageSet1: pagesSets[0], pageSet2: pagesSets[1], });
-    }
+    };
 
 
     _beginCalcT = debounce(500, false, this._beginCalc);
@@ -152,65 +162,3 @@ class PageSetOne extends React.PureComponent
         }
     };
 }
-
-
-class Utils
-{
-    calc(start, pages)
-    {
-        let $pages = pages;
-        let $start = start;
-
-        const $C_INICOLOR = "#BDB20E";
-        const $C_INISECCOLOR = "#555";
-
-// "<span style="color:#555;">$cou_down,</span><span style="color:#BDB20E;">$cou_up,</span>"
-// "<span style="color:#555;">$cou_down,</span><span style="color:#BDB20E;">$cou_up,</span>"
-// "<span style="color:#555;">$cou_down,</span><span style="color:#BDB20E;">$cou_up,</span>"
-
-        "<br />";
-        let $divisible_4 = Math.ceil($pages / 4) * 4; // кол-во страниц кратное 4-м
-        let $f_odd;
-        if (($pages % 4) != 0) {
-            $f_odd = 1;
-        } else {
-            $f_odd = 0;
-        } // счётчик вниз
-        let cou_down = $divisible_4 + $start - 1;
-        let $cou_up = $start ? $start : 1;   // счётчик вверх
-        let $color_sec = $C_INICOLOR;
-        let $color = $C_INISECCOLOR;
-        let $pagesSet = [];
-console.log( '{cou_down, $cou_up, $divisible_4}', {cou_down, $cou_up, $divisible_4} );
-
-        for (let $i = 1; $i <= Math.ceil($pages / 4); $i++) {
-            let item;
-
-            if ($f_odd && ($i == 1)) item = [["bl", "red"]];
-            else if (((($divisible_4 - $pages) == 3)) && ($i == 2)) item = [["bl", "red"]]; //  || (($divisible_4 - $pages) == 2)
-            else item = [[cou_down, $color]];
-            cou_down -= 2;
-            item[1] = [$cou_up, $color_sec];
-            $cou_up += 2;
-            $pagesSet.push(item);
-        } // endfor
-
-        // "<p>".redFont("<strong>Вторая сторона:</strong>", "#00f").
-        let $pagesSet2 = [];
-        $cou_up = $start + 1;
-        cou_down = $divisible_4 + $start - 2;
-        for ($i = 1; $i <= Math.ceil($pages / 4); $i++) {
-            let item;
-            // $s1 = redFont("$cou_up,", $color_sec);
-            item = [[$cou_up, $color_sec]];
-            $cou_up += 2;
-            if ((($divisible_4 - $pages) == 2) && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = ["bl", "red"];
-            else if (($divisible_4 - $pages) == 3 && (($divisible_4 - cou_down + $start - 1) == 1)) item[1] = ["bl", "red"];
-            else item[1] = [cou_down, $color];
-            cou_down -= 2;
-            $pagesSet2.push(item);
-        } // endfor
-        return [$pagesSet, $pagesSet2];
-    }
-}
-

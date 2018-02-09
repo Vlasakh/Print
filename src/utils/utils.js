@@ -1,5 +1,7 @@
 /* disable no-undefined,no-param-reassign,no-shadow */
 
+import React from 'react';
+
 /**
  * Throttle execution of a function. Especially useful for rate limiting
  * execution of handlers on events like resize and scroll.
