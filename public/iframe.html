@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>iFrame test</title>
+    <script type="text/javascript">
+      const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+      const eventer = window[eventMethod];
+      const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+      // Listen to message from child window
+      eventer(messageEvent, function (e) {
+          console.log('parent received message!:  ', e.data);
+      }, false);
+    </script>
+  </head>
+  <body>
+    <iframe src="http://localhost:8081/?utm_site=1&utm_source=2&app_type_id=2&align=center" width="600" height="400"></iframe>
+    <!--<iframe src="http://localhost:3000/?utm_site=1&utm_source=2&utm_user=user1&align=center" width="600" height="400"></iframe>-->
+  </body>
+</html>

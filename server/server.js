@@ -28,7 +28,22 @@ router.get("/", function(req, res){
 });
 
 router.get("/:id", function(req, res){
-        res.send(`Product ${req.params.id}`);
+        // res.send(`Product ${req.params.id}`);
+        path = 'public/' + req.params.id;
+
+        fs.readFile(path, function(err, data){
+            if(err){
+                console.log(err);
+                res.writeHead(404, { 'Content-Type' : 'text/plain'});
+                res.end('Not Found!');
+            }
+            else{
+                res.writeHead(200, { 'Content-Type' : 'text/html'});
+                res.write(data.toString());
+                console.log('data was sent');
+                res.end();
+            }
+        });
     });
 
 // app.get("/", function(req, res){
@@ -41,6 +56,6 @@ app.use('/static', express.static('public'));
 
 
 app.listen(8081, function(){
-    console.log('Server starting!');
+    console.log('Server starting! on http://localhost:8081');
 });
 

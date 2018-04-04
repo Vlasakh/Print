@@ -1,9 +1,18 @@
-
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { App } from '../react/App.jsx';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+import { App } from '../react/containers/App.jsx';
+import configureStore from '../react/stores/configureStore';
 
-console.log( 'here', 0 );
+console.clear();
+
+const store = configureStore();
+
+// ReactDOM.render(<App/>, document.getElementById('root'));
+render(
+	<Provider store={store}>
+		<App />
+	</Provider>,
+  document.getElementById('root')
+);

@@ -105,7 +105,7 @@ module.exports = {
         ],
     },
     plugins: [
-        new WebpackNotifierPlugin({title: 'bundler.js', }),
+        new WebpackNotifierPlugin({title: 'bundler.js', alwaysNotify: true}),
         // excludeWarnings: true,
         //contentImage: path.join(__dirname, '../frontend/Images/ImagesSrc/favicon.png')
 
